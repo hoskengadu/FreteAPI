@@ -1,0 +1,354 @@
+{
+	"info": {
+		"name": "FreteAPI - Postman Collection",
+		"description": "Collection para testar a FreteAPI - Sistema de Agendamento de Fretes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/health",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"health"
+					]
+				},
+				"description": "Verifica se a API está funcionando"
+			}
+		},
+		{
+			"name": "Clientes",
+			"item": [
+				{
+					"name": "Criar Cliente",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set('clienteId', jsonData.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"João Silva\",\n  \"email\": \"joao@email.com\",\n  \"telefone\": \"11999999999\",\n  \"latitude\": -23.5505,\n  \"longitude\": -46.6333\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/clientes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"clientes"
+							]
+						},
+						"description": "Cria um novo cliente no sistema"
+					}
+				},
+				{
+					"name": "Criar Cliente - Maria",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Maria Santos\",\n  \"email\": \"maria@email.com\",\n  \"telefone\": \"11888888888\",\n  \"latitude\": -23.5489,\n  \"longitude\": -46.6388\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/clientes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"clientes"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Profissionais",
+			"item": [
+				{
+					"name": "Buscar Profissionais Próximos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.length > 0) {",
+									"        pm.environment.set('profissionalId', jsonData[0].id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/profissionais/proximos?latitude=-23.5505&longitude=-46.6333&dataHora=2024-01-15T10:00:00&duracaoMinutos=120",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profissionais",
+								"proximos"
+							],
+							"query": [
+								{
+									"key": "latitude",
+									"value": "-23.5505",
+									"description": "Latitude do cliente"
+								},
+								{
+									"key": "longitude",
+									"value": "-46.6333",
+									"description": "Longitude do cliente"
+								},
+								{
+									"key": "dataHora",
+									"value": "2024-01-15T10:00:00",
+									"description": "Data e hora desejada"
+								},
+								{
+									"key": "duracaoMinutos",
+									"value": "120",
+									"description": "Duração em minutos"
+								}
+							]
+						},
+						"description": "Busca profissionais próximos e disponíveis"
+					}
+				}
+			]
+		},
+		{
+			"name": "Agendamentos",
+			"item": [
+				{
+					"name": "Criar Agendamento",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set('agendamentoId', jsonData.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"clienteId\": \"{{clienteId}}\",\n  \"profissionalId\": \"{{profissionalId}}\",\n  \"data\": \"2024-01-15\",\n  \"horaInicio\": \"10:00\",\n  \"horaFim\": \"12:00\",\n  \"enderecoOrigem\": \"Rua das Flores, 123 - São Paulo, SP\",\n  \"latitudeOrigem\": -23.5505,\n  \"longitudeOrigem\": -46.6333\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/agendamentos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"agendamentos"
+							]
+						},
+						"description": "Cria um novo agendamento de frete"
+					}
+				},
+				{
+					"name": "Criar Agendamento - Conflito",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"clienteId\": \"{{clienteId}}\",\n  \"profissionalId\": \"{{profissionalId}}\",\n  \"data\": \"2024-01-15\",\n  \"horaInicio\": \"11:00\",\n  \"horaFim\": \"13:00\",\n  \"enderecoOrigem\": \"Av. Paulista, 1000 - São Paulo, SP\",\n  \"latitudeOrigem\": -23.5618,\n  \"longitudeOrigem\": -46.6565\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/agendamentos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"agendamentos"
+							]
+						},
+						"description": "Tenta criar agendamento com conflito (deve falhar)"
+					}
+				}
+			]
+		},
+		{
+			"name": "Testes de Validação",
+			"item": [
+				{
+					"name": "Cliente - Email Inválido",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Teste Erro\",\n  \"email\": \"email-invalido\",\n  \"telefone\": \"11999999999\",\n  \"latitude\": -23.5505,\n  \"longitude\": -46.6333\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/clientes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"clientes"
+							]
+						},
+						"description": "Testa validação de email (deve retornar 400)"
+					}
+				},
+				{
+					"name": "Cliente - Telefone Inválido",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Teste Erro\",\n  \"email\": \"teste@email.com\",\n  \"telefone\": \"123\",\n  \"latitude\": -23.5505,\n  \"longitude\": -46.6333\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/clientes",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"clientes"
+							]
+						},
+						"description": "Testa validação de telefone (deve retornar 400)"
+					}
+				},
+				{
+					"name": "Agendamento - Data no Passado",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"clienteId\": \"{{clienteId}}\",\n  \"profissionalId\": \"{{profissionalId}}\",\n  \"data\": \"2020-01-15\",\n  \"horaInicio\": \"10:00\",\n  \"horaFim\": \"12:00\",\n  \"enderecoOrigem\": \"Teste\",\n  \"latitudeOrigem\": -23.5505,\n  \"longitudeOrigem\": -46.6333\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/v1/agendamentos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"agendamentos"
+							]
+						},
+						"description": "Testa agendamento no passado (deve retornar 400)"
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}

@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  # API Service
+  freieapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: freteapi-app
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+    depends_on:
+      - postgres
+    networks:
+      - freteapi-network
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: freieapi-postgres
+    environment:
+      POSTGRES_DB: FreteAPI
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - freteapi-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d FreteAPI"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # pgAdmin (opcional, para administração do banco)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: freteapi-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@freteapi.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "8081:80"
+    depends_on:
+      - postgres
+    networks:
+      - freteapi-network
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+networks:
+  freteapi-network:
+    driver: bridge

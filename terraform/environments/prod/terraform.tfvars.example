@@ -1,0 +1,43 @@
+# Production Environment Variables
+# Copy this file to terraform.tfvars and set your values
+# IMPORTANT: Use strong passwords and secure values for production!
+
+# Cloud Deployment Selection
+deploy_to_aws   = true
+deploy_to_azure = false
+deploy_to_gcp   = false
+
+# AWS Configuration
+aws_region = "us-east-1"
+
+# Azure Configuration (uncomment if deploying to Azure)
+# azure_location = "East US"
+
+# GCP Configuration (uncomment if deploying to GCP)
+# gcp_project_id = "your-production-gcp-project-id"
+# gcp_region     = "us-central1"
+
+# Database Configuration
+# IMPORTANT: Use strong, unique passwords for production!
+database_name     = "freteapi"
+database_username = "freteapi"
+database_password = "YourVeryStrongProductionPassword123!@#"
+
+# Application Configuration
+api_image      = "freteapi:latest"
+api_version    = "v1.0.0"
+run_migrations = false  # Be careful with migrations in production
+
+# Monitoring Configuration
+notification_email = "alerts@yourcompany.com"
+
+# Production Checklist:
+# - [ ] Configure backend state storage (S3, Azure Storage, or GCS)
+# - [ ] Set up proper IAM roles and permissions
+# - [ ] Configure monitoring and alerting
+# - [ ] Set up backup strategies
+# - [ ] Review security groups and network ACLs
+# - [ ] Enable logging and audit trails
+# - [ ] Set up SSL/TLS certificates
+# - [ ] Configure DNS and domain names
+# - [ ] Test disaster recovery procedures
