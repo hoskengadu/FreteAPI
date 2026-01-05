@@ -3,7 +3,7 @@
 ## 🏢 Empresa & Licenciamento
 
 **Desenvolvido por**: [Hosken Technology](https://hoskentechnology.com.br/)  
-**Desenvolvedor Principal**: [Gadu Hosken](www.linkedin.com/in/gadu-hosken)  
+**Desenvolvedor Principal**: [Gadu Hosken](https://www.linkedin.com/in/gadu-hosken)  
 **Licença**: © 2026 Hosken Technology - Todos os direitos reservados  
 **Versão**: 1.0.0  
 **Data**: Janeiro 2026
